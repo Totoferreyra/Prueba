@@ -5,7 +5,6 @@ devuelva en que fila y columna se encuentra el menor elemento de la matriz.*/
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
-#include <time.h>
 
 using namespace std;
 
