@@ -1,51 +1,51 @@
-/*Consigna: Defina y de valores a una matriz de enteros de 5 filas y 4 columnas. Llame a una función que
-acepte matrices de tipo entero con 4 columnas (cantidad de filas a pasar como parámetro) y
-devuelva en que fila y columna se encuentra el menor elemento de la matriz.*/
-
 #include <iostream>
 #include <fstream>
-#include <stdlib.h>
+#include "rwstring.hpp"
 
 using namespace std;
 
-int minimo (int mat [][4], int filas){
-    int fmin = 0;
-    int cmin = 0;
-    for (int i = 0; i < filas; i++){
-        for (int j = 0; j < 4; j++){
-            if (mat[i][j] < mat[fmin][cmin]){
-                fmin = i;
-                cmin = j;
-            }
+struct envio{
+    string ciudad;
+    int codigo;
+    string producto;
+    int cantidad;
+    float monto;
+};
 
-        }
-    }
-    return ((fmin) * 10) + (cmin);
+int criterio_prod(envio a, envio b)
+{
+	if (a.producto == b.producto)
+		return a.cantidad.compare(b.cantidad);
+	else
+		return a.producto > b.producto ? 1 : -1;
+}
+void ordenar(envio vec[], int dim, int (*criterio)(envio,envio)){
+
+    int i, j;
+	envio aux;
+
+	for (i = 1 ; i < dim ; i++) {
+		aux = vec[i];
+		j = i - 1;
+
+		while (j >= 0 && criterio(vec[j], aux) > 0) {
+			vec[j + 1] = vec[j];
+			j--;
+		}
+		vec[j + 1] = aux;
+	}
 }
 
-void mostrar (int mat [][4], int filas){
-    for (int i = 0; i < filas; i++){
-        for (int j = 0; j < 4; j++){
-            cout << mat[i][j] << "\t";
-        }
-        cout << endl;
-    }
+void listciudad (envio vec[], int dim){
+    cout << "CIUDAD\tUNIDADES\tSUMATORIA" << endl;
+    for (int i = 0; i < dim; i++){
+        
 
+    }
 }
+
 
 int main() {
-    int filas = 5;
-    int mat [filas][4] {{5, 3, 7, 3},
-                        {9, 2, 4, 10},
-                        {11, 12, 13, 14},
-                        {18, 21, 1, 24},
-                        {-2, 34, 32,45}};
-    
-    mostrar (mat, filas);
-    cout << "El elemento mas pequeño es el " << mat[minimo(mat, filas)/10][minimo(mat, filas)%10] << 
-    " en la posicion " << minimo(mat, filas)/10 + 1 << " - " << minimo(mat, filas)%10 + 1;
-
-
     
     return 0;
 }
