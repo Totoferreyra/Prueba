@@ -1,37 +1,62 @@
-%option noyywrap
-
 %{
-    #include <stdio.h>
+#include <stdio.h>
+#include <string.h>
 
-    int decimales = 0;
-    int octales = 0;
-    int hexas = 0;
-    int nose = 0;
+// Contadores para identificadores y literales cadena
+int ident_contador = 0;
+int cadena_contador = 0;
 
+// Estructura para contar las palabras reservadas
+struct PalabraReservada {
+    char *palabra;
+    int linea;
+    int columna;
+    // Puedes agregar más información según sea necesario
+};
+struct PalabraReservada reservadas[1000]; // Ejemplo, ajusta según tus necesidades
+
+// Estructura para contar constantes
+struct ConstanteDecimal {
+    int valor;
+    int total;
+};
+struct ConstanteDecimal decimales[1000]; // Ejemplo, ajusta según tus necesidades
+
+// Otras estructuras para las otras categorías léxicas según sea necesario
 %}
 
-NUMERO_DECIMAL [0-9]
-NUMERO_OCTAL [0-7]
-NUMERO_HEXA [0-9A-Fa-f]
+%option noyywrap
 
 %%
 
-[1-9]{NUMERO_DECIMAL}+ {printf("Constante decimal: %s \n", yytext); decimales++;}
-0{NUMERO_OCTAL}* {printf("Constante octal %s \n", yytext); octales++;}
-0[xX]{NUMERO_HEXA}+ {printf("Constante hexa %s \n", yytext); hexas++;}
-. {nose++;}
+[a-zA-Z_][a-zA-Z0-9_]* {
+    // Incrementar contador y almacenar información
+    ident_contador++;
+    printf("IDENTIFICADOR: %s\n", yytext);
+}
+
+\"([^\"\\\n]|\\.)*\" {
+    // Incrementar contador y almacenar información
+    cadena_contador++;
+    printf("CADENA: %s\n", yytext);
+}
+[^ \t\s]+ {
+    // Manejar caracteres no reconocidos
+    printf("PALABRA DESCONOCIDA: %s\n", yytext);
+}
 
 %%
 
-int main(){
-    yyin = fopen("entrada.txt", "r");
-    yyout = fopen("salida.txt", "w");
+int main() {
+    FILE* archivo = fopen("entrada.txt", "r");
+
+    // Inicializa el analizador léxico
+    yyin = archivo;
     yylex();
 
-    printf("Cantidad decimales: %d \n", decimales);
-    printf("Cantidad octales: %d \n", octales);
-    printf("Cantidad hexadecimales: %d \n", hexas);
-    printf("Cantidad no identificados: %d \n", nose);
+    // Genera el reporte según los requisitos
 
+    // Cierre del archivo y liberación de recursos
+    fclose(archivo);
     return 0;
 }
